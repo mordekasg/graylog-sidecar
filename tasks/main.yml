@@ -2,8 +2,19 @@
 ---
 - name: Install required package
   apt:
-    deb: "{{ graylog_sidecar_package }}"
+    deb: "{{ graylog_sidecar_package[ansible_pkg_mgr] | default([]) }}"
     state: present
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - graylog-sidecar
+
+- name: Install required package
+  yum:
+    name: "{{ graylog_sidecar_package[ansible_pkg_mgr] | default([]) }}"
+    state: present
+  when:
+    - ansible_os_family == "RedHat"
   tags:
     - graylog-sidecar
 
